@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CoverMe</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CoverMe</h1>
+      <div id="profile-status"></div>
+    </header>
+    
+    <div id="job-detection-status">
+      <div class="job-status-message">Checking for job description...</div>
+      <div class="spinner"></div>
+    </div>
+    
+    <div id="job-detected" class="hidden">
+      <div class="job-info">
+        <button id="job-back-btn" class="job-back-btn">← Back</button>
+        <!-- <button id="next-btn" class="job-back-btn">Next →</button> -->
+        <div id="job-title"></div>
+        <div id="company-name"></div>
+      </div>
+      
+      <div class="generator-options">
+        <div class="option-group">
+          <label for="template-select">Template Style:</label>
+          <select id="template-select">
+            <option value="formal">Formal</option>
+            <option value="modern">Modern</option>
+            <option value="creative">Creative</option>
+          </select>
+        </div>
+        
+        <div class="option-group">
+          <label for="tone-select">Tone:</label>
+          <select id="tone-select">
+            <option value="professional">Professional</option>
+            <option value="enthusiastic">Enthusiastic</option>
+            <option value="balanced">Balanced</option>
+          </select>
+        </div>
+        
+        <button id="generate-btn" class="primary-btn">Generate Cover Letter</button>
+      </div>
+    </div>
+    
+    <div id="no-job-detected" class="hidden">
+      <div class="message">
+        <p>No job description detected on this page.</p>
+        <p>You can manually paste the job description below:</p>
+        <div class="manual-input">
+          <textarea id="manual-job-description" placeholder="Paste the job description here..."></textarea>
+          <div class="manual-input-fields">
+            <input type="text" id="manual-job-title" placeholder="Job Title">
+            <input type="text" id="manual-company-name" placeholder="Company Name">
+          </div>
+          <button id="manual-submit-btn" class="primary-btn">Use This Description</button>
+        </div>
+      </div>
+    </div>
+
+    
+    
+    <div id="profile-incomplete" class="hidden">
+      <div class="message">
+        <p>Please complete your profile to generate cover letters.</p>
+        <button id="setup-profile-btn" class="secondary-btn">Complete Your Profile</button>
+      </div>
+    </div>
+
+    <div id="api-key-missing" class="hidden">
+      <div class="message">
+        <p>⚠️ API Key Required</p>
+        <p>You need to configure your Google Gemini API key to generate cover letters.</p>
+        <button id="setup-api-key-btn" class="primary-btn">Configure API Key</button>
+      </div>
+    </div>
+    
+    <div id="cover-letter-output" class="hidden">
+      <div class="letter-actions">
+        <button id="back-btn" class="secondary-btn">← Back</button>
+        <div class="action-group">
+          <button id="edit-btn" class="secondary-btn">Edit</button>
+          <!-- <button id="refine-btn" class="secondary-btn">Refine</button> -->
+          <button id="custom-prompt-btn" class="secondary-btn">Custom Prompt</button>
+        </div>
+      </div>
+
+      <div id="custom-prompt-modal" class="modal hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Custom Edit Instructions</h3>
+            <button class="close-modal">×</button>
+          </div>
+          <div class="modal-body">
+            <p>Tell the AI how you want to modify your cover letter:</p>
+            <textarea id="custom-prompt" placeholder="E.g., Make it more enthusiastic, emphasize my leadership skills, make it more concise..."></textarea>
+          </div>
+          <div class="modal-footer">
+            <button id="apply-custom-prompt" class="primary-btn">Apply Changes</button>
+            <button class="cancel-modal secondary-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="letter-preview">
+        <textarea id="letter-content" readonly></textarea>
+      </div>
+
+      <div class="primary-actions">
+        <button id="download-btn" class="primary-btn">Download Cover Letter</button>
+        <button id="save-template-btn" class="secondary-btn">Save as Template</button>
+      </div>
+    </div>
+
+    <!-- Footer actions - now outside of any section -->
+    <div class="footer-actions">
+      <button id="edit-profile-btn" class="secondary-btn">
+        <span class="icon">👤</span>
+        Edit Profile
+      </button>
+      <button id="view-templates-btn" class="secondary-btn">
+        <span class="icon">📄</span>
+        My Templates
+      </button>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

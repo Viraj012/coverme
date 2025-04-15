@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - Cover Letter Generator</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Settings</h1>
+      <p class="subtitle">Configure your extension settings</p>
+    </header>
+
+    <main>
+      <div id="api-key-section">
+        <h2>API Configuration</h2>
+        <div class="info-box">
+          <p>🔑 You need to provide a Google Gemini API key to generate cover letters.</p>
+          <p>Don't have an API key? <a href="https://makersuite.google.com/app/apikey" target="_blank">Get one here</a></p>
+        </div>
+        <form id="api-key-form">
+          <div class="form-group">
+            <label for="api-key">Google Gemini API Key:</label>
+            <div class="api-key-input">
+              <input type="password" id="api-key" name="api-key" required>
+              <button type="button" id="toggle-visibility" class="secondary-btn">Show</button>
+            </div>
+            <small class="help-text">Your API key is stored securely and only used to generate cover letters.</small>
+          </div>
+          <div class="button-row">
+            <button type="submit" id="save-api-key-btn" class="primary-btn">Save API Key</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="save-success" class="hidden">
+        <div class="success-message">
+          <h2>✅ API Key Saved!</h2>
+          <p>Your API key has been saved successfully. You can now generate cover letters.</p>
+          <button id="return-btn" class="primary-btn">Return to Extension</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <script src="settings.js"></script>
+</body>
+</html> 

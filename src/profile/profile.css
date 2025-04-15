@@ -1,0 +1,207 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    color: #333;
+    background-color: #f5f5f5;
+    line-height: 1.6;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .hidden {
+    display: none !important;
+  }
+  
+  /* Header styles */
+  header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+  }
+  
+  .subtitle {
+    color: #7f8c8d;
+    font-size: 16px;
+  }
+  
+  h2 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #34495e;
+    margin-bottom: 16px;
+  }
+  
+  /* Form styling */
+  .form-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .form-section:last-of-type {
+    border-bottom: none;
+  }
+  
+  .hint {
+    font-size: 12px;
+    color: #7f8c8d;
+    margin-bottom: 8px;
+  }
+  
+  .form-group {
+    margin-bottom: 16px;
+    flex: 1;
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 16px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="month"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: border-color 0.2s;
+  }
+  
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: #3498db;
+  }
+  
+  .checkbox-group {
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .checkbox-group input[type="checkbox"] {
+    margin-right: 6px;
+  }
+  
+  .checkbox-group label {
+    margin-bottom: 0;
+    font-weight: normal;
+  }
+  
+  /* Work and education entries */
+  .experience-entry,
+  .education-entry {
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  
+  .entry-remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: #e74c3c;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  /* Button styles */
+  button {
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  
+  .button-row {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .primary-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    min-width: 150px;
+  }
+  
+  .primary-btn:hover {
+    background-color: #2980b9;
+  }
+  
+  .secondary-btn {
+    background-color: #f8f9fa;
+    color: #34495e;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-weight: 500;
+  }
+  
+  .secondary-btn:hover {
+    background-color: #eee;
+  }
+  
+  /* Success message */
+  #save-success {
+    padding: 30px;
+    text-align: center;
+  }
+  
+  .success-message {
+    background-color: #f1f9f7;
+    border: 1px solid #38c172;
+    border-radius: 8px;
+    padding: 30px;
+  }
+  
+  .success-message h2 {
+    color: #38c172;
+    margin-bottom: 16px;
+  }
+  
+  .success-message p {
+    margin-bottom: 24px;
+  }

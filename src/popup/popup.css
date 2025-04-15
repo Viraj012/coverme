@@ -1,0 +1,608 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    color: #333;
+    background-color: #f5f5f5;
+  }
+  
+  .container {
+    min-width: 400px;
+    padding: 20px;
+    position: relative;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  .hidden {
+    display: none !important;
+  }
+  
+  /* Header styles */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #2c3e50;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  #profile-status {
+    font-size: 13px;
+    color: #7f8c8d;
+    font-weight: 500;
+  }
+  
+  /* Job detection status */
+  #job-detection-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 12px;
+    margin: 24px 0;
+  }
+  
+  .job-status-message {
+    font-weight: 500;
+    color: #7f8c8d;
+  }
+  
+  .spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(52, 152, 219, 0.1);
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Job detected section */
+  .job-info {
+    margin-bottom: 24px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    position: relative;
+    border: 1px solid #eee;
+    transition: all 0.3s ease;
+  }
+  
+  .job-info:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  #job-back-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 14px;
+    padding: 6px 12px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+  
+  #job-back-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #ccc;
+  }
+  
+  #job-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-top: 32px;
+    margin-bottom: 8px;
+  }
+  
+  #company-name {
+    font-size: 16px;
+    color: #7f8c8d;
+  }
+  
+  .generator-options {
+    margin-bottom: 20px;
+  }
+  
+  .option-group {
+    margin-bottom: 16px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #34495e;
+  }
+  
+  select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+  
+  select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+  }
+  
+  /* Message styles */
+  .message {
+    text-align: center;
+    padding: 24px;
+    background-color: #fff3e0;
+    border: 1px solid #ffe0b2;
+    border-radius: 8px;
+    margin: 16px 0;
+  }
+  
+  .message p:first-child {
+    font-weight: 600;
+    font-size: 16px;
+    color: #e65100;
+    margin-bottom: 8px;
+  }
+  
+  .message p:last-child {
+    color: #424242;
+    margin-bottom: 16px;
+  }
+  
+  .message button {
+    min-width: 160px;
+  }
+  
+  /* Letter actions section */
+  .letter-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* This will distribute space between buttons */
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+  }
+
+  #back-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+  }
+  
+  .letter-actions .action-group {
+    display: flex;
+    gap: 10px;
+    margin-left: auto; /* Push these buttons to the right */
+  }
+  
+  
+ /* Make all buttons in the action bar have consistent width */
+ .letter-actions button {
+  padding: 8px 16px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0; /* Remove the fixed min-width */
+  width: auto; /* Allow width to be determined by content */
+}
+  
+  .letter-actions #back-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 60px;
+    padding: 8px 10px;
+  }
+  
+  /* Letter preview */
+  .letter-preview {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    padding: 4px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+  }
+  
+  .letter-preview:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  #letter-content {
+    width: 100%;
+    height: 300px;
+    padding: 16px;
+    border: none;
+    resize: none;
+    font-family: 'Georgia', serif;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    font-size: 14px;
+    color: #2c3e50;
+  }
+  
+  #letter-content:focus {
+    outline: none;
+  }
+  
+  /* Primary actions */
+  .primary-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .primary-actions .primary-btn {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-weight: 500;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+    transition: all 0.2s ease;
+  }
+  
+  .primary-actions .primary-btn:hover {
+    background: linear-gradient(45deg, #2980b9, #2472a4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+  }
+  
+  .primary-actions .secondary-btn {
+    background-color: #fff;
+    color: #34495e;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 500;
+    width: 100%;
+    transition: all 0.2s ease;
+  }
+  
+  .primary-actions .secondary-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #ccc;
+    transform: translateY(-1px);
+  }
+  
+  /* Footer actions */
+  .footer-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 16px 0;
+    margin-top: auto;
+    border-top: 1px solid #eee;
+  }
+  
+  .text-btn {
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    color: #1976d2;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+  
+  .text-btn:hover {
+    color: #1565c0;
+  }
+  
+  .text-btn .icon {
+    font-size: 16px;
+  }
+  
+  /* Button base styles */
+  button {
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+  }
+  
+  .primary-btn {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-weight: 500;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+    transition: all 0.2s ease;
+  }
+  
+  .primary-btn:hover {
+    background: linear-gradient(45deg, #2980b9, #2472a4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+  }
+  
+  .secondary-btn {
+    background-color: #fff;
+    color: #34495e;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 500;
+    width: 100%;
+    transition: all 0.2s ease;
+  }
+  
+  .secondary-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #ccc;
+    transform: translateY(-1px);
+  }
+  
+  #back-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+  }
+  
+  /* Manual input section */
+  .manual-input {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .manual-input textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.6;
+    transition: all 0.2s ease;
+  }
+  
+  .manual-input textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+  }
+  
+  .manual-input-fields {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .manual-input-fields input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+  
+  .manual-input-fields input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+  }
+  
+  .manual-input button {
+    width: 100%;
+    margin-top: 12px;
+  }
+  
+  /* Modal styles */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .modal.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 340px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+  }
+  
+  .modal.show .modal-content {
+    transform: translateY(0);
+  }
+  
+  .modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+  }
+  
+  .close-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #95a5a6;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .close-modal:hover {
+    background-color: #f8f9fa;
+    color: #7f8c8d;
+  }
+  
+  .modal-body {
+    padding: 20px;
+  }
+  
+  .modal-body p {
+    margin-bottom: 12px;
+    color: #34495e;
+    font-size: 14px;
+  }
+  
+  #custom-prompt {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.6;
+    transition: all 0.2s ease;
+  }
+  
+  #custom-prompt:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+  }
+  
+  .modal-footer {
+    padding: 16px 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+  
+  /* Custom prompt button */
+  #custom-prompt-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  /* #custom-prompt-btn::before {
+    content: "✏️";
+    font-size: 14px;
+  } */
+  
+  #api-key-missing {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  #api-key-missing .message {
+    border-color: #ffccbc;
+    background-color: #fff3e0;
+  }
+  
+  #api-key-missing .message p:first-of-type {
+    color: #e53e3e;
+  }
+  
+  #api-key-missing .message p:last-of-type {
+    color: #666;
+    margin-bottom: 16px;
+  }
+  
+  #api-key-missing .primary-btn {
+    background-color: #1976d2;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  #api-key-missing .primary-btn:hover {
+    background-color: #1565c0;
+  }
+  
+  #setup-api-key-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  #setup-api-key-btn:hover {
+    background-color: #0056b3;
+  }
