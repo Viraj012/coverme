@@ -247,14 +247,14 @@ ${jobDetails.companyAddress || ''}
 Dear Hiring Manager,
 
 `;
+//  Requirements: ${jobDetails.requirements?.join('\n') || 'Not specified'}
+//  Responsibilities: ${jobDetails.responsibilities?.join('\n') || 'Not specified'}
 
   const prompt = `Generate a professional cover letter body for the following job and candidate. Do not include any headers, greetings, or closings as they will be added separately:
 
 Job Details:
 Title: ${jobDetails.title || 'Not specified'}
 Company: ${jobDetails.company || 'Not specified'}
-Requirements: ${jobDetails.requirements?.join('\n') || 'Not specified'}
-Responsibilities: ${jobDetails.responsibilities?.join('\n') || 'Not specified'}
 
 Candidate Profile:
 Name: ${userProfile.name}
@@ -269,19 +269,23 @@ Education: ${userProfile.education.map(edu =>
 Personal Traits: ${userProfile.personalTraits.join(', ')}
 
 Style: ${templateStyle || 'formal'}
-Tone: ${tone || 'professional'}
+Tone: ${tone || 'professional'}|
 
-Please generate a compelling cover letter body that:
-1. Matches the requested style (${templateStyle || 'formal'}) and tone (${tone || 'professional'})
-2. Highlights the candidate's relevant skills and experience
-3. Addresses the specific job requirements
-4. Shows enthusiasm for the company and role
-5. Maintains a professional tone
-6. Is concise and well-structured
-7. Do not include any headers, greetings, or closings`;
+KEY INSTRUCTIONS:
+1. Analyze the job details and identify 2-3 specific aspects to focus on
+2. Write in a natural, conversational tone that reflects a real human's voice
+3. Include 1-2 specific examples from the applicant's work history that directly relate to the job requirements
+4. Incorporate one unique personal insight or approach the applicant might bring to the role
+5. Vary sentence structure and avoid repetitive patterns
+6. Eliminate generic phrases like "I believe I am the perfect candidate" or "I am writing to apply"
+7. Use specific language about the company/position that shows genuine interest
+8. Create a logical flow between paragraphs (3 paragraphs maximum)
+9. Keep the total length under 300 words
+10. Add subtle personality elements that match the requested tone
+11. DO NOT use AI-giveaway phrases like "I am excited to submit my application" or "I am confident that my skills align perfectly"`;
 
   try {
-    // Get the API key from storage - this will throw an error if not configured
+    // Get the API key from storage - this will throw an error if not configured 
     const apiKey = await getApiKey();
     
     // console.log('Sending request to Gemini API...');
