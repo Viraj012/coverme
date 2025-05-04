@@ -18,7 +18,7 @@ CoverMe is a browser extension that automatically detects job descriptions when 
 ## Installation
 
 ### Chrome Web Store (Recommended)
-1. Visit the [Chrome Web Store](https://chrome.google.com/webstore) and search for "CoverMe"
+1. Visit the [Chrome Web Store](https://chromewebstore.google.com/detail/coverme/dcpjcoihaeknfjnffmcimldjnpilonpc) and search for "CoverMe"
 2. Click "Add to Chrome"
 3. Follow the on-screen instructions to complete installation
 
