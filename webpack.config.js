@@ -11,7 +11,8 @@ module.exports = {
     'profile/profile': './src/profile/profile.js',
     'templates/templates': './src/templates/templates.js',
     'settings/settings': './src/settings/settings.js',
-    'onboarding/onboarding': './src/onboarding/onboarding.js'
+    'onboarding/onboarding': './src/onboarding/onboarding.js',
+    'utils/jobDetection': './src/utils/jobDetection.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
