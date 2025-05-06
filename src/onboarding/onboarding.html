@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to CoverMe</title>
+  <link rel="stylesheet" href="onboarding.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Step indicator -->
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+        <div class="step active">1</div>
+        <div class="step">2</div>
+        <div class="step">3</div>
+        <div class="step">4</div>
+      </div>
+    </div>
+
+    <!-- Welcome screen -->
+    <div class="onboarding-step" id="step-1">
+      <div class="logo-container">
+        <img src="../icons/icon128.png" alt="CoverMe Logo" class="logo">
+      </div>
+      <h1>Welcome to CoverMe!</h1>
+      <p class="subtitle">Your AI-powered cover letter assistant</p>
+      
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">🔍</div>
+          <div class="feature-text">Automatically detect job descriptions</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">✍️</div>
+          <div class="feature-text">Generate personalized cover letters</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🚀</div>
+          <div class="feature-text">Apply to jobs faster and with confidence</div>
+        </div>
+      </div>
+      
+      <button class="primary-btn" id="get-started-btn">Get Started</button>
+    </div>
+
+    <!-- Basic profile setup -->
+    <div class="onboarding-step hidden" id="step-2">
+      <h2>Let's set up your basic profile</h2>
+      <p class="subtitle">Just the essentials to get you started</p>
+      
+      <form id="basic-profile-form">
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="quick-bio">Quick Professional Bio</label>
+          <textarea id="quick-bio" name="professionalSummary" rows="3" placeholder="A brief summary of your professional background and goals" required></textarea>
+        </div>
+        
+        <div class="button-row">
+          <button type="button" class="secondary-btn prev-btn">Back</button>
+          <button type="button" class="primary-btn next-btn">Continue</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- API key setup with explanation -->
+    <div class="onboarding-step hidden" id="step-3">
+      <h2>Connect to AI Magic</h2>
+      <p class="subtitle">CoverMe uses Google's Gemini AI to create your personalized cover letters</p>
+      
+      <div class="api-explanation">
+        <p>You'll need a free Google Gemini API key to use this extension. Here's why:</p>
+        <ul>
+          <li>Your key ensures your data stays private</li>
+          <li>You control your own API usage</li>
+          <li>Google offers generous free tier access</li>
+        </ul>
+      </div>
+      
+      <div class="api-instructions">
+        <h3>How to get your API key:</h3>
+        <ol>
+          <li>Visit <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></li>
+          <li>Sign in with your Google account</li>
+          <li>Create a new API key (it's free)</li>
+          <li>Copy and paste it below</li>
+        </ol>
+      </div>
+      
+      <div class="form-group">
+        <label for="api-key">Your Gemini API Key</label>
+        <input type="password" id="api-key" name="apiKey">
+        <button type="button" id="show-key-btn" class="icon-btn">👁️</button>
+      </div>
+      
+      <p class="note">Don't have a key right now? You can set it up later in the extension settings.</p>
+      
+      <div class="button-row">
+        <button type="button" class="secondary-btn prev-btn">Back</button>
+        <button type="button" class="primary-btn next-btn">Continue</button>
+      </div>
+    </div>
+
+    <!-- Tutorial screen -->
+    <div class="onboarding-step hidden" id="step-4">
+      <h2>You're all set!</h2>
+      <p class="subtitle">Here's how to use CoverMe</p>
+      
+      <div class="tutorial-steps">
+        <div class="tutorial-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Browse Job Sites</h3>
+            <p>Visit your favorite job sites like LinkedIn, Indeed, or Glassdoor</p>
+            <img src="../images/tutorial-browse.svg" alt="Browsing job sites" class="tutorial-image">
+          </div>
+        </div>
+        
+        <div class="tutorial-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>CoverMe Detects Jobs</h3>
+            <p>When you view a job posting, CoverMe will automatically detect it</p>
+            <img src="../images/tutorial-detect.svg" alt="Job detection" class="tutorial-image">
+          </div>
+        </div>
+        
+        <div class="tutorial-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Generate Your Cover Letter</h3>
+            <p>Click the CoverMe icon and generate a personalized cover letter in seconds</p>
+            <img src="../images/tutorial-generate.svg" alt="Generating cover letter" class="tutorial-image">
+          </div>
+        </div>
+      </div>
+      
+      <p class="complete-profile-prompt">Want to add more details to your profile for better personalization?</p>
+      
+      <div class="button-row">
+        <button type="button" class="secondary-btn prev-btn">Back</button>
+        <button type="button" class="secondary-btn" id="complete-profile-btn">Complete Full Profile</button>
+        <button class="primary-btn" id="finish-btn">Start Using CoverMe</button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="onboarding.js"></script>
+</body>
+</html>

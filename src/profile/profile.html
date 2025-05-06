@@ -3,152 +3,225 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile Setup - Cover Letter Generator</title>
+  <title>Profile Setup - CoverMe</title>
   <link rel="stylesheet" href="profile.css">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>Profile Setup</h1>
-      <p class="subtitle">Let's set up your profile for personalized cover letters</p>
+      <div class="header-content">
+        <div class="logo-container">
+          <img src="../icons/icon48.png" alt="CoverMe Logo" class="logo">
+          <h1>Profile Setup</h1>
+        </div>
+        <p class="subtitle">Complete your profile for personalized cover letters</p>
+      </div>
     </header>
     
-    <form id="profile-form">
-      <div class="form-section">
-        <h2>Personal Information</h2>
-        
-        <div class="form-group">
-          <label for="name">Full Name</label>
-          <input type="text" id="name" name="name" required>
+    <div class="form-container">
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <div class="progress-steps">
+            <div class="progress-step active" data-step="personal">
+              <div class="step-icon">1</div>
+              <span class="step-label">Personal</span>
+            </div>
+            <div class="progress-step" data-step="skills">
+              <div class="step-icon">2</div>
+              <span class="step-label">Skills</span>
+            </div>
+            <div class="progress-step" data-step="experience">
+              <div class="step-icon">3</div>
+              <span class="step-label">Experience</span>
+            </div>
+            <div class="progress-step" data-step="education">
+              <div class="step-icon">4</div>
+              <span class="step-label">Education</span>
+            </div>
+          </div>
         </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
+      </div>
+      
+      <form id="profile-form">
+        <!-- Personal Information Section -->
+        <div class="form-section" id="personal-section">
+          <div class="form-section-header">
+            <div class="section-icon">👤</div>
+            <h2>Personal Information</h2>
           </div>
           
           <div class="form-group">
-            <label for="phone">Phone</label>
-            <input type="tel" id="phone" name="phone" required>
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required>
           </div>
-        </div>
-      </div>
-      
-      <div class="form-section">
-        <h2>Professional Summary</h2>
-        
-        <div class="form-group">
-          <label for="professionalSummary">Brief overview of your professional background (2-3 sentences)</label>
-          <textarea id="professionalSummary" name="professionalSummary" rows="3" required></textarea>
-        </div>
-      </div>
-      
-      <div class="form-section">
-        <h2>Key Skills</h2>
-        <p class="hint">List skills relevant to your target jobs (separate with commas)</p>
-        
-        <div class="form-group">
-          <input type="text" id="skills" name="skills" placeholder="e.g., JavaScript, Project Management, Data Analysis" required>
-        </div>
-      </div>
-      
-      <div class="form-section">
-        <h2>Work Experience</h2>
-        <p class="hint">Add your most recent and relevant positions</p>
-        
-        <div id="work-experience-container">
-          <!-- Template for work experience entries -->
-          <div class="experience-entry">
-            <div class="form-row">
-              <div class="form-group">
-                <label>Job Title</label>
-                <input type="text" name="workTitle[]" required>
-              </div>
-              
-              <div class="form-group">
-                <label>Company</label>
-                <input type="text" name="workCompany[]" required>
-              </div>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label>Start Date</label>
-                <input type="month" name="workStart[]" required>
-              </div>
-              
-              <div class="form-group">
-                <label>End Date</label>
-                <input type="month" name="workEnd[]">
-                <div class="checkbox-group">
-                  <input type="checkbox" id="current-position-0" class="current-position">
-                  <label for="current-position-0">Current Position</label>
-                </div>
-              </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required>
             </div>
             
             <div class="form-group">
-              <label>Key Achievements/Responsibilities</label>
-              <textarea name="workAchievements[]" rows="2" required></textarea>
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" name="phone" required>
             </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="professionalSummary">Professional Summary</label>
+            <textarea id="professionalSummary" name="professionalSummary" rows="3" 
+              placeholder="Brief overview of your professional background (2-3 sentences)" required></textarea>
+          </div>
+          
+          <div class="button-row">
+            <div></div> <!-- Empty div for spacing -->
+            <button type="button" class="primary-btn next-btn" data-next="skills">Continue to Skills</button>
           </div>
         </div>
         
-        <button type="button" id="add-work-btn" class="secondary-btn">+ Add Another Position</button>
-      </div>
-      
-      <div class="form-section">
-        <h2>Education</h2>
-        
-        <div id="education-container">
-          <!-- Template for education entries -->
-          <div class="education-entry">
-            <div class="form-row">
-              <div class="form-group">
-                <label>Degree/Certificate</label>
-                <input type="text" name="educationDegree[]" required>
-              </div>
-              
-              <div class="form-group">
-                <label>Institution</label>
-                <input type="text" name="educationInstitution[]" required>
-              </div>
+        <!-- Skills Section -->
+        <div class="form-section hidden" id="skills-section">
+          <div class="form-section-header">
+            <div class="section-icon">🔧</div>
+            <h2>Skills & Traits</h2>
+          </div>
+          
+          <div class="form-group">
+            <label for="skills">Key Skills</label>
+            <div class="tags-input-container">
+              <input type="text" id="skills-input" placeholder="Type a skill and press Enter">
+              <div class="tags-container" id="skills-tags"></div>
+              <input type="hidden" id="skills" name="skills">
             </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label>Graduation Year</label>
-                <input type="number" name="educationYear[]" min="1950" max="2099" required>
-              </div>
-              
-              <div class="form-group">
-                <label>Field of Study</label>
-                <input type="text" name="educationField[]" required>
-              </div>
+            <div class="hint">Add skills relevant to your target jobs (e.g., JavaScript, Project Management)</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="personalTraits">Personal Traits</label>
+            <div class="tags-input-container">
+              <input type="text" id="traits-input" placeholder="Type a trait and press Enter">
+              <div class="tags-container" id="traits-tags"></div>
+              <input type="hidden" id="personalTraits" name="personalTraits">
             </div>
+            <div class="hint">Add personality traits that make you stand out (e.g., Detail-oriented, Team player)</div>
+          </div>
+          
+          <div class="button-row">
+            <button type="button" class="secondary-btn back-btn" data-back="personal">Back</button>
+            <button type="button" class="primary-btn next-btn" data-next="experience">Continue to Experience</button>
           </div>
         </div>
         
-        <button type="button" id="add-education-btn" class="secondary-btn">+ Add Another Education</button>
-      </div>
-      
-      <div class="form-section">
-        <h2>Personal Traits</h2>
-        <p class="hint">Personality traits that make you stand out (separate with commas)</p>
-        
-        <div class="form-group">
-          <input type="text" id="personalTraits" name="personalTraits" placeholder="e.g., Detail-oriented, Team player, Problem-solver" required>
+        <!-- Work Experience Section -->
+        <div class="form-section hidden" id="experience-section">
+          <div class="form-section-header">
+            <div class="section-icon">💼</div>
+            <h2>Work Experience</h2>
+          </div>
+          
+          <div id="work-experience-container">
+            <!-- Template for work experience entries -->
+            <div class="card experience-entry">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Job Title</label>
+                  <input type="text" name="workTitle[]" required>
+                </div>
+                
+                <div class="form-group">
+                  <label>Company</label>
+                  <input type="text" name="workCompany[]" required>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Start Date</label>
+                  <input type="month" name="workStart[]" required>
+                </div>
+                
+                <div class="form-group">
+                  <label>End Date</label>
+                  <input type="month" name="workEnd[]">
+                  <div class="checkbox-group">
+                    <input type="checkbox" id="current-position-0" class="current-position">
+                    <label for="current-position-0" class="checkbox-label">Current Position</label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label>Key Achievements/Responsibilities</label>
+                <textarea name="workAchievements[]" rows="2" 
+                  placeholder="Describe your key achievements and responsibilities" required></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <button type="button" id="add-work-btn" class="add-btn">
+            <span class="btn-icon">+</span> Add Another Position
+          </button>
+          
+          <div class="button-row">
+            <button type="button" class="secondary-btn back-btn" data-back="skills">Back</button>
+            <button type="button" class="primary-btn next-btn" data-next="education">Continue to Education</button>
+          </div>
         </div>
-      </div>
-      
-      <div class="button-row">
-        <button type="submit" id="save-profile-btn" class="primary-btn">Save Profile</button>
-      </div>
-    </form>
+        
+        <!-- Education Section -->
+        <div class="form-section hidden" id="education-section">
+          <div class="form-section-header">
+            <div class="section-icon">🎓</div>
+            <h2>Education</h2>
+          </div>
+          
+          <div id="education-container">
+            <!-- Template for education entries -->
+            <div class="card education-entry">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Degree/Certificate</label>
+                  <input type="text" name="educationDegree[]" required>
+                </div>
+                
+                <div class="form-group">
+                  <label>Institution</label>
+                  <input type="text" name="educationInstitution[]" required>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Graduation Year</label>
+                  <input type="number" name="educationYear[]" min="1950" max="2099" required>
+                </div>
+                
+                <div class="form-group">
+                  <label>Field of Study</label>
+                  <input type="text" name="educationField[]" required>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <button type="button" id="add-education-btn" class="add-btn">
+            <span class="btn-icon">+</span> Add Another Education
+          </button>
+          
+          <div class="button-row">
+            <button type="button" class="secondary-btn back-btn" data-back="experience">Back</button>
+            <button type="submit" id="save-profile-btn" class="primary-btn">Save Profile</button>
+          </div>
+        </div>
+      </form>
+    </div>
     
     <div id="save-success" class="hidden">
-      <div class="success-message">
+      <div class="success-card">
+        <div class="success-icon">✓</div>
         <h2>Profile Saved Successfully!</h2>
         <p>Your profile information has been saved. You're now ready to generate personalized cover letters.</p>
         <button id="return-btn" class="primary-btn">Start Generating Cover Letters</button>

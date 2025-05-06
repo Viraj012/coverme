@@ -3,48 +3,201 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Settings - Cover Letter Generator</title>
+  <title>Settings - CoverMe</title>
   <link rel="stylesheet" href="settings.css">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>Settings</h1>
-      <p class="subtitle">Configure your extension settings</p>
+      <div class="header-content">
+        <div class="logo-container">
+          <img src="../icons/icon48.png" alt="CoverMe Logo" class="logo">
+          <h1>Settings</h1>
+        </div>
+        <p class="subtitle">Customize your CoverMe experience</p>
+      </div>
     </header>
-
+    
     <main>
-      <div id="api-key-section">
-        <h2>API Configuration</h2>
-        <div class="info-box">
-          <p>🔑 You need to provide a Google Gemini API key to generate cover letters.</p>
-          <p>Don't have an API key? <a href="https://makersuite.google.com/app/apikey" target="_blank">Get one here</a></p>
+      <section class="settings-card" id="api-key-section">
+        <div class="card-header">
+          <div class="section-icon">🔑</div>
+          <h2>API Key Configuration</h2>
         </div>
-        <form id="api-key-form">
-          <div class="form-group">
-            <label for="api-key">Google Gemini API Key:</label>
-            <div class="api-key-input">
-              <input type="password" id="api-key" name="api-key" required>
-              <button type="button" id="toggle-visibility" class="secondary-btn">Show</button>
+        
+        <div class="card-content">
+          <p class="description">
+            CoverMe uses Google's Gemini AI to generate personalized cover letters. To use this feature, you need to provide your own API key.
+          </p>
+          
+          <div class="api-instructions">
+            <h3>How to get your API key:</h3>
+            <ol>
+              <li>Visit <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></li>
+              <li>Sign in with your Google account</li>
+              <li>Create a new API key (it's free)</li>
+              <li>Copy and paste it below</li>
+            </ol>
+          </div>
+          
+          <form id="api-key-form">
+            <div class="form-group">
+              <label for="api-key">Your Gemini API Key</label>
+              <div class="input-with-icon">
+                <input type="password" id="api-key" name="apiKey" placeholder="Enter your API key here...">
+                <button type="button" id="show-key-btn" class="icon-btn">👁️</button>
+              </div>
             </div>
-            <small class="help-text">Your API key is stored securely and only used to generate cover letters.</small>
+            
+            <div id="api-key-status" class="status-message"></div>
+            
+            <div class="button-group">
+              <button type="button" id="verify-key-btn" class="secondary-btn">Verify Key</button>
+              <button type="submit" id="save-key-btn" class="primary-btn">Save API Key</button>
+            </div>
+          </form>
+        </div>
+      </section>
+      
+      <section class="settings-card" id="preferences-section">
+        <div class="card-header">
+          <div class="section-icon">⚙️</div>
+          <h2>Default Preferences</h2>
+        </div>
+        
+        <div class="card-content">
+          <p class="description">
+            Set your default preferences for cover letter generation. These will be pre-selected when you generate a new cover letter.
+          </p>
+          
+          <form id="preferences-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="default-template">Default Template Style</label>
+                <div class="select-wrapper">
+                  <select id="default-template" name="defaultTemplate">
+                    <option value="formal">Formal</option>
+                    <option value="modern">Modern</option>
+                    <option value="creative">Creative</option>
+                  </select>
+                  <span class="select-arrow">▼</span>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="default-tone">Default Tone</label>
+                <div class="select-wrapper">
+                  <select id="default-tone" name="defaultTone">
+                    <option value="professional">Professional</option>
+                    <option value="enthusiastic">Enthusiastic</option>
+                    <option value="balanced">Balanced</option>
+                  </select>
+                  <span class="select-arrow">▼</span>
+                </div>
+              </div>
+            </div>
+            
+            <div id="preferences-status" class="status-message"></div>
+            
+            <button type="submit" id="save-preferences-btn" class="primary-btn">Save Preferences</button>
+          </form>
+        </div>
+      </section>
+      
+      <section class="settings-card" id="data-section">
+        <div class="card-header">
+          <div class="section-icon">🔒</div>
+          <h2>Data Management</h2>
+        </div>
+        
+        <div class="card-content">
+          <p class="description">
+            Manage your saved data and templates. All data is stored locally on your device.
+          </p>
+          
+          <div class="data-actions">
+            <div class="data-action">
+              <h3>Export Profile</h3>
+              <p>Export your profile data as a JSON file.</p>
+              <button id="export-profile-btn" class="secondary-btn">Export Profile</button>
+            </div>
+            
+            <div class="data-action">
+              <h3>Import Profile</h3>
+              <p>Import a previously exported profile.</p>
+              <label for="import-profile" class="file-input-label">
+                <span>Import Profile</span>
+                <input type="file" id="import-profile" accept=".json" hidden>
+              </label>
+            </div>
+            
+            <div class="data-action danger-zone">
+              <h3>Reset All Data</h3>
+              <p>Warning: This will delete all your profile data and saved templates.</p>
+              <button id="reset-data-btn" class="danger-btn">Reset All Data</button>
+            </div>
           </div>
-          <div class="button-row">
-            <button type="submit" id="save-api-key-btn" class="primary-btn">Save API Key</button>
+        </div>
+      </section>
+      
+      <section class="settings-card" id="about-section">
+        <div class="card-header">
+          <div class="section-icon">ℹ️</div>
+          <h2>About CoverMe</h2>
+        </div>
+        
+        <div class="card-content">
+          <div class="about-info">
+            <p><strong>Version:</strong> 1.2.0</p>
+            <p><strong>Created by:</strong> Viraj</p>
+            <p><strong>Powered by:</strong> Google Gemini API</p>
+            
+            <div class="about-links">
+              <a href="https://github.com/viraj012/coverme" target="_blank" class="link-btn">
+                <span class="link-icon">📂</span>
+                Source Code
+              </a>
+              <a href="mailto:vishalrajpurohit226@gmail.com" class="link-btn">
+                <span class="link-icon">📧</span>
+                Contact Support
+              </a>
+              <a href="https://github.com/viraj012/coverme/issues" target="_blank" class="link-btn">
+                <span class="link-icon">🐞</span>
+                Report a Bug
+              </a>
+            </div>
           </div>
-        </form>
-      </div>
-
-      <div id="save-success" class="hidden">
-        <div class="success-message">
-          <h2>✅ API Key Saved!</h2>
-          <p>Your API key has been saved successfully. You can now generate cover letters.</p>
-          <button id="return-btn" class="primary-btn">Return to Extension</button>
+        </div>
+      </section>
+    </main>
+    
+    <footer>
+      <button id="back-btn" class="secondary-btn">
+        <span class="btn-icon">←</span>
+        Back to CoverMe
+      </button>
+    </footer>
+    
+    <!-- Modal for confirming reset -->
+    <div id="reset-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Confirm Reset</h3>
+          <button class="close-modal">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="warning-icon">⚠️</div>
+          <p>Are you sure you want to reset all data?</p>
+          <p class="warning-text">This action will delete your profile, settings, and all saved templates. This cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-modal secondary-btn">Cancel</button>
+          <button id="confirm-reset-btn" class="danger-btn">Reset All Data</button>
         </div>
       </div>
-    </main>
+    </div>
   </div>
   
   <script src="settings.js"></script>
 </body>
-</html> 
+</html>

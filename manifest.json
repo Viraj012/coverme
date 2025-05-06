@@ -5,8 +5,7 @@
     "description": "Generate tailored cover letters from job descriptions",
     "permissions": [
       "activeTab",
-      "storage",
-      "scripting"
+      "storage"
     ],
     "host_permissions": [
       "<all_urls>"
@@ -38,7 +37,9 @@
         "profile/*",
         "settings/*",
         "templates/*",
-        "popup/*"
+        "popup/*",
+        "onboarding/*",
+        "images/*"
       ],
       "matches": ["<all_urls>"]
     }]

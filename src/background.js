@@ -7,12 +7,13 @@ const API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-
 // Check if this is the first time the extension is installed
 chrome.runtime.onInstalled.addListener(function(details) {
   if (details.reason === 'install') {
-    // First time installation - redirect to profile setup page
+    // First time installation - redirect to our new onboarding page instead of profile setup
     chrome.tabs.create({
-      url: chrome.runtime.getURL('profile/profile.html')
+      url: chrome.runtime.getURL('onboarding/onboarding.html')
     });
     
     // Initialize storage with empty user profile and settings
+    // This will be populated during the onboarding process
     chrome.storage.local.set({
       userProfile: {
         completed: false,
@@ -33,12 +34,8 @@ chrome.runtime.onInstalled.addListener(function(details) {
       preferences: {
         defaultTemplate: 'formal',
         defaultTone: 'professional'
-      }
-    });
-    
-    // After profile setup, redirect to API key setup page
-    chrome.tabs.create({
-      url: chrome.runtime.getURL('settings/settings.html')
+      },
+      onboardingComplete: false
     });
   }
 });
@@ -65,8 +62,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // Content script has detected a job description
     // console.log('Job description detected on: ' + sender.tab.url);
     
-    // Check if user profile is completed and API key is configured
-    chrome.storage.local.get(['userProfile', 'settings'], function(data) {
+    // Check if onboarding is complete first
+    chrome.storage.local.get(['onboardingComplete', 'userProfile', 'settings'], function(data) {
+      // If onboarding isn't complete, redirect to onboarding flow
+      if (!data.onboardingComplete) {
+        chrome.tabs.create({
+          url: chrome.runtime.getURL('onboarding/onboarding.html')
+        });
+        sendResponse({ status: 'onboarding_incomplete' });
+        return;
+      }
+      
+      // Check if profile is completed
       if (!data.userProfile || !data.userProfile.completed) {
         // If profile is not completed, redirect to profile setup
         chrome.tabs.create({
@@ -76,6 +83,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return;
       }
       
+      // Check if API key is configured
       if (!data.settings || !data.settings.apiKey || !data.settings.apiKeyConfigured) {
         // If API key is not configured, show settings page
         chrome.tabs.create({
@@ -222,6 +230,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     
     return true; // Keep the message channel open for async response
   }
+  
+  // Add handler for checking onboarding status
+  if (message.action === 'checkOnboardingStatus') {
+    chrome.storage.local.get(['onboardingComplete'], function(data) {
+      sendResponse({ 
+        status: 'success', 
+        onboardingComplete: !!data.onboardingComplete 
+      });
+    });
+    return true; // Keep the message channel open for async response
+  }
 });
 
 // Function to generate cover letter using Gemini API
@@ -247,8 +266,6 @@ ${jobDetails.companyAddress || ''}
 Dear Hiring Manager,
 
 `;
-//  Requirements: ${jobDetails.requirements?.join('\n') || 'Not specified'}
-//  Responsibilities: ${jobDetails.responsibilities?.join('\n') || 'Not specified'}
 
   const prompt = `Generate a professional cover letter body for the following job and candidate. Do not include any headers, greetings, or closings as they will be added separately:
 

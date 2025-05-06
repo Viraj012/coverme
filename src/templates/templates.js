@@ -1,308 +1,292 @@
-// Templates management script
+// Templates Page JavaScript
 
-// DOM elements
-const elements = {
-    templatesContainer: document.getElementById('templates-container'),
-    noTemplates: document.getElementById('no-templates'),
-    templateViewer: document.getElementById('template-viewer'),
-    templateName: document.getElementById('template-name'),
-    templateDate: document.getElementById('template-date'),
-    templateContent: document.getElementById('template-content'),
-    backToListBtn: document.getElementById('back-to-list-btn'),
-    editTemplateBtn: document.getElementById('edit-template-btn'),
-    deleteTemplateBtn: document.getElementById('delete-template-btn'),
-    downloadTemplateBtn: document.getElementById('download-template-btn'),
-    returnToPopupBtn: document.getElementById('return-to-popup-btn'),
-    confirmationDialog: document.getElementById('confirmation-dialog'),
-    cancelDeleteBtn: document.getElementById('cancel-delete-btn'),
-    confirmDeleteBtn: document.getElementById('confirm-delete-btn'),
-    templateCardTemplate: document.getElementById('template-card-template')
-  };
+document.addEventListener('DOMContentLoaded', function() {
+  // DOM Elements
+  const templatesContainer = document.getElementById('templates-container');
+  const emptyState = document.getElementById('empty-state');
+  const searchInput = document.getElementById('search-templates');
+  const searchBtn = document.getElementById('search-btn');
+  const filterSelect = document.getElementById('filter-templates');
   
-  // State variables
-  let savedTemplates = [];
-  let currentTemplateId = null;
+  const templateModal = document.getElementById('template-modal');
+  const modalTitle = document.getElementById('modal-title');
+  const templateDate = document.getElementById('template-date');
+  const templateStyle = document.getElementById('template-style');
+  const templateTone = document.getElementById('template-tone');
+  const templateJobTitle = document.getElementById('template-job-title');
+  const templateCompany = document.getElementById('template-company');
+  const templateContent = document.getElementById('template-content');
   
-  // Initialize templates page
-  function initTemplatesPage() {
-    // console.log('Initializing templates page');
+  const editTemplateBtn = document.getElementById('edit-template-btn');
+  const useTemplateBtn = document.getElementById('use-template-btn');
+  const deleteTemplateBtn = document.getElementById('delete-template-btn');
+  
+  const deleteModal = document.getElementById('delete-modal');
+  const deleteTemplateName = document.getElementById('delete-template-name');
+  const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+  
+  const closeModalBtns = document.querySelectorAll('.close-modal, .cancel-modal');
+  const backBtn = document.getElementById('back-btn');
+  const goGenerateBtn = document.getElementById('go-generate-btn');
+  
+  // Current templates and selected template
+  let templates = [];
+  let currentTemplate = null;
+  
+  // Load templates
+  loadTemplates();
+  
+  // Search functionality
+  searchInput.addEventListener('input', filterTemplates);
+  searchBtn.addEventListener('click', function() {
+    filterTemplates();
+  });
+  
+  // Filter functionality
+  filterSelect.addEventListener('change', filterTemplates);
+  
+  // Close modals
+  closeModalBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      templateModal.classList.add('hidden');
+      deleteModal.classList.add('hidden');
+    });
+  });
+  
+  // Delete template button
+  deleteTemplateBtn.addEventListener('click', function() {
+    if (!currentTemplate) return;
     
-    // Load saved templates
+    deleteModal.classList.remove('hidden');
+    deleteTemplateName.textContent = currentTemplate.name;
+  });
+  
+  // Confirm delete
+  confirmDeleteBtn.addEventListener('click', function() {
+    if (!currentTemplate) return;
+    
+    // Remove template from storage
     chrome.storage.local.get(['savedTemplates'], function(data) {
-      savedTemplates = data.savedTemplates || [];
+      let savedTemplates = data.savedTemplates || [];
       
-      // Display templates or no templates message
-      if (savedTemplates.length === 0) {
-        showNoTemplates();
-      } else {
-        showTemplatesList();
-      }
-    });
-    
-    // Set up event listeners
-    setupEventListeners();
-  }
-  
-  // Show no templates message
-  function showNoTemplates() {
-    elements.templatesContainer.innerHTML = '';
-    elements.noTemplates.classList.remove('hidden');
-    elements.templateViewer.classList.add('hidden');
-  }
-  
-  // Show templates list
-  function showTemplatesList() {
-    elements.templatesContainer.innerHTML = '';
-    elements.noTemplates.classList.add('hidden');
-    elements.templateViewer.classList.add('hidden');
-    
-    // Sort templates by created date (newest first)
-    savedTemplates.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    
-    // Create template cards
-    savedTemplates.forEach(template => {
-      const templateCard = createTemplateCard(template);
-      elements.templatesContainer.appendChild(templateCard);
-    });
-  }
-  
-  // Show template viewer
-  function showTemplateViewer(templateId) {
-    elements.templatesContainer.classList.add('hidden');
-    elements.noTemplates.classList.add('hidden');
-    elements.templateViewer.classList.remove('hidden');
-    
-    // Find the template
-    const template = savedTemplates.find(t => t.id === templateId);
-    
-    if (template) {
-      currentTemplateId = template.id;
+      // Find and remove the template
+      savedTemplates = savedTemplates.filter(template => template.id !== currentTemplate.id);
       
-      // Update viewer with template details
-      elements.templateName.textContent = template.name;
-      
-      // Format date
-      const createdDate = new Date(template.createdAt);
-      const formattedDate = createdDate.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+      // Save updated templates
+      chrome.storage.local.set({ savedTemplates }, function() {
+        // Close modals and reload templates
+        deleteModal.classList.add('hidden');
+        templateModal.classList.add('hidden');
+        
+        loadTemplates();
       });
-      elements.templateDate.textContent = `Created on: ${formattedDate}`;
-      
-      // Set content
-      elements.templateContent.value = template.content;
-      elements.templateContent.readOnly = true;
-    }
-  }
+    });
+  });
   
-  // Create a template card
-  function createTemplateCard(template) {
-    // Clone the template
-    const templateCardClone = document.importNode(elements.templateCardTemplate.content, true);
-    const templateCard = templateCardClone.querySelector('.template-card');
+  // Edit template button
+  editTemplateBtn.addEventListener('click', function() {
+    if (!currentTemplate) return;
     
-    // Set template ID
-    templateCard.dataset.id = template.id;
+    // Make template content editable
+    templateContent.readOnly = false;
+    templateContent.focus();
     
-    // Fill in template details
-    templateCard.querySelector('.template-card-title').textContent = template.name;
+    // Change button to save
+    editTemplateBtn.innerHTML = '<span class="btn-icon">💾</span>Save';
+    editTemplateBtn.removeEventListener('click', arguments.callee);
     
-    // Format date
-    const createdDate = new Date(template.createdAt);
-    const formattedDate = createdDate.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-    templateCard.querySelector('.template-card-date').textContent = formattedDate;
-    
-    // Set preview text (first 200 characters)
-    const previewText = template.content.substring(0, 200);
-    templateCard.querySelector('.template-card-preview').textContent = previewText;
-    
-    // Set up event listeners for card buttons
-    templateCard.querySelector('.view-template-btn').addEventListener('click', () => {
-      showTemplateViewer(template.id);
-    });
-    
-    templateCard.querySelector('.delete-template-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      showDeleteConfirmation(template.id);
-    });
-    
-    return templateCard;
-  }
-  
-  // Setup event listeners
-  function setupEventListeners() {
-    // Back to list button
-    elements.backToListBtn.addEventListener('click', () => {
-      elements.templatesContainer.classList.remove('hidden');
-      elements.templateViewer.classList.add('hidden');
-      currentTemplateId = null;
-    });
-    
-    // Edit template button
-    elements.editTemplateBtn.addEventListener('click', () => {
-      elements.templateContent.readOnly = false;
-      elements.templateContent.focus();
-      elements.editTemplateBtn.textContent = 'Save';
+    // Add save functionality
+    editTemplateBtn.addEventListener('click', function saveEdit() {
+      // Get edited content
+      const editedContent = templateContent.value;
       
-      // Change button functionality to save
-      elements.editTemplateBtn.removeEventListener('click', editTemplate);
-      elements.editTemplateBtn.addEventListener('click', saveEditedTemplate);
+      // Update template in storage
+      chrome.storage.local.get(['savedTemplates'], function(data) {
+        let savedTemplates = data.savedTemplates || [];
+        
+        // Find and update the template
+        savedTemplates = savedTemplates.map(template => {
+          if (template.id === currentTemplate.id) {
+            template.content = editedContent;
+          }
+          return template;
+        });
+        
+        // Save updated templates
+        chrome.storage.local.set({ savedTemplates }, function() {
+          // Make content readonly again
+          templateContent.readOnly = true;
+          
+          // Change button back to edit
+          editTemplateBtn.innerHTML = '<span class="btn-icon">✎</span>Edit';
+          
+          // Update current template
+          currentTemplate.content = editedContent;
+          
+          // Remove this event listener and add back the edit listener
+          editTemplateBtn.removeEventListener('click', saveEdit);
+          editTemplateBtn.addEventListener('click', arguments.callee);
+        });
+      });
     });
+  });
+  
+  // Use template button
+  useTemplateBtn.addEventListener('click', function() {
+    if (!currentTemplate) return;
     
-    // Delete template button
-    elements.deleteTemplateBtn.addEventListener('click', () => {
-      showDeleteConfirmation(currentTemplateId);
-    });
-    
-    // Download template button
-    elements.downloadTemplateBtn.addEventListener('click', downloadTemplate);
-    
-    // Return to popup button
-    elements.returnToPopupBtn.addEventListener('click', () => {
+    // Set the template as current letter
+    chrome.storage.local.set({ 
+      currentLetter: currentTemplate.content,
+      templateUsed: currentTemplate.id
+    }, function() {
+      // Open popup
       window.close();
     });
-    
-    // Confirmation dialog buttons
-    elements.cancelDeleteBtn.addEventListener('click', hideDeleteConfirmation);
-    elements.confirmDeleteBtn.addEventListener('click', deleteCurrentTemplate);
-  }
+  });
   
-  // Edit template - switch to edit mode
-  function editTemplate() {
-    elements.templateContent.readOnly = false;
-    elements.templateContent.focus();
-    elements.editTemplateBtn.textContent = 'Save';
-    
-    // Change button functionality to save
-    elements.editTemplateBtn.removeEventListener('click', editTemplate);
-    elements.editTemplateBtn.addEventListener('click', saveEditedTemplate);
-  }
+  // Back button
+  backBtn.addEventListener('click', function() {
+    window.close();
+  });
   
-  // Save edited template
-  function saveEditedTemplate() {
-    // Get current template
-    const templateIndex = savedTemplates.findIndex(t => t.id === currentTemplateId);
-    
-    if (templateIndex !== -1) {
-      // Update template content
-      savedTemplates[templateIndex].content = elements.templateContent.value;
+  // Go generate button
+  goGenerateBtn.addEventListener('click', function() {
+    window.close();
+  });
+  
+  // Function to load templates
+  function loadTemplates() {
+    chrome.storage.local.get(['savedTemplates'], function(data) {
+      templates = data.savedTemplates || [];
       
-      // Save to storage
-      chrome.storage.local.set({ savedTemplates: savedTemplates }, function() {
-        console.log('Template updated successfully');
-        
-        // Switch back to view mode
-        elements.templateContent.readOnly = true;
-        elements.editTemplateBtn.textContent = 'Edit';
-        
-        // Change button functionality back to edit
-        elements.editTemplateBtn.removeEventListener('click', saveEditedTemplate);
-        elements.editTemplateBtn.addEventListener('click', editTemplate);
-        
-        // Show notification
-        showNotification('Template updated successfully');
+      if (templates.length > 0) {
+        emptyState.classList.add('hidden');
+        renderTemplates(templates);
+      } else {
+        emptyState.classList.remove('hidden');
+        templatesContainer.innerHTML = '';
+      }
+    });
+  }
+  
+  // Function to render templates
+  function renderTemplates(templatesArray) {
+    templatesContainer.innerHTML = '';
+    
+    templatesArray.forEach(template => {
+      const card = document.createElement('div');
+      card.className = 'template-card';
+      card.setAttribute('data-id', template.id);
+      card.setAttribute('data-style', template.style || 'formal');
+      
+      card.innerHTML = `
+        <div class="template-header">
+          <h3 class="template-title">${template.name}</h3>
+        </div>
+        <div class="template-meta">
+          <p class="template-job">${template.jobTitle || 'Generic Cover Letter'}</p>
+          <p class="template-company">${template.company || 'Any Company'}</p>
+        </div>
+        <div class="template-tags">
+          <span class="template-tag">${capitalizeFirstLetter(template.style || 'formal')}</span>
+          <span class="template-tag">${capitalizeFirstLetter(template.tone || 'professional')}</span>
+        </div>
+      `;
+      
+      // Add click event to open modal
+      card.addEventListener('click', function() {
+        openTemplateModal(template);
+      });
+      
+      templatesContainer.appendChild(card);
+    });
+  }
+  
+  // Function to open template modal
+  function openTemplateModal(template) {
+    currentTemplate = template;
+    
+    // Set modal content
+    modalTitle.textContent = template.name;
+    templateDate.textContent = formatDate(template.created || new Date());
+    templateStyle.textContent = capitalizeFirstLetter(template.style || 'formal');
+    templateTone.textContent = capitalizeFirstLetter(template.tone || 'professional');
+    templateJobTitle.textContent = template.jobTitle || 'Generic Cover Letter';
+    templateCompany.textContent = template.company || 'Any Company';
+    templateContent.value = template.content || '';
+    
+    // Make sure content is readonly
+    templateContent.readOnly = true;
+    
+    // Reset edit button
+    editTemplateBtn.innerHTML = '<span class="btn-icon">✎</span>Edit';
+    
+    // Show modal
+    templateModal.classList.remove('hidden');
+  }
+  
+  // Function to filter templates
+  function filterTemplates() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const filterValue = filterSelect.value;
+    
+    let filteredTemplates = templates;
+    
+    // Apply search filter
+    if (searchTerm) {
+      filteredTemplates = filteredTemplates.filter(template => {
+        return (
+          (template.name && template.name.toLowerCase().includes(searchTerm)) ||
+          (template.jobTitle && template.jobTitle.toLowerCase().includes(searchTerm)) ||
+          (template.company && template.company.toLowerCase().includes(searchTerm))
+        );
+      });
+    }
+    
+    // Apply style filter
+    if (filterValue !== 'all') {
+      filteredTemplates = filteredTemplates.filter(template => {
+        return template.style === filterValue;
+      });
+    }
+    
+    // Check if we have results
+    if (filteredTemplates.length > 0) {
+      emptyState.classList.add('hidden');
+      renderTemplates(filteredTemplates);
+    } else {
+      // Show a message for no results
+      templatesContainer.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <h3>No Templates Found</h3>
+          <p>No templates match your search or filter criteria.</p>
+          <button id="clear-filters-btn" class="secondary-btn">Clear Filters</button>
+        </div>
+      `;
+      
+      // Add event listener to clear filters button
+      document.getElementById('clear-filters-btn').addEventListener('click', function() {
+        searchInput.value = '';
+        filterSelect.value = 'all';
+        loadTemplates();
       });
     }
   }
   
-  // Download template
-  function downloadTemplate() {
-    // Find current template
-    const template = savedTemplates.find(t => t.id === currentTemplateId);
-    
-    if (template) {
-      // Create filename
-      const filename = `${template.name.replace(/[^a-zA-Z0-9]/g, '')}-CoverLetter.txt`;
-      
-      // Create blob and download link
-      const blob = new Blob([template.content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      
-      // Create temporary link and click it
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.click();
-      
-      // Clean up
-      URL.revokeObjectURL(url);
-      
-      // Show notification
-      showNotification('Template downloaded!');
-    }
+  // Helper function to capitalize first letter
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
   
-  // Show delete confirmation dialog
-  function showDeleteConfirmation(templateId) {
-    currentTemplateId = templateId;
-    elements.confirmationDialog.classList.remove('hidden');
-  }
-  
-  // Hide delete confirmation dialog
-  function hideDeleteConfirmation() {
-    elements.confirmationDialog.classList.add('hidden');
-  }
-  
-  // Delete current template
-  function deleteCurrentTemplate() {
-    // Remove template from array
-    savedTemplates = savedTemplates.filter(t => t.id !== currentTemplateId);
-    
-    // Save updated templates to storage
-    chrome.storage.local.set({ savedTemplates: savedTemplates }, function() {
-      // console.log('Template deleted successfully');
-      
-      // Hide confirmation dialog
-      hideDeleteConfirmation();
-      
-      // If in template viewer, go back to list
-      elements.templateViewer.classList.add('hidden');
-      
-      // If no templates left, show no templates message
-      if (savedTemplates.length === 0) {
-        showNoTemplates();
-      } else {
-        // Otherwise, refresh templates list
-        showTemplatesList();
-      }
-      
-      // Show notification
-      showNotification('Template deleted successfully');
+  // Helper function to format date
+  function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
     });
   }
-  
-  // Show a notification message
-  function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.textContent = message;
-    
-    // Style the notification
-    notification.style.position = 'fixed';
-    notification.style.bottom = '20px';
-    notification.style.left = '50%';
-    notification.style.transform = 'translateX(-50%)';
-    notification.style.backgroundColor = '#4CAF50';
-    notification.style.color = 'white';
-    notification.style.padding = '12px 24px';
-    notification.style.borderRadius = '4px';
-    notification.style.zIndex = '10000';
-    notification.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-    
-    document.body.appendChild(notification);
-    
-    // Remove after 3 seconds
-    setTimeout(() => {
-      notification.style.opacity = '0';
-      notification.style.transition = 'opacity 0.5s';
-      setTimeout(() => notification.remove(), 500);
-    }, 3000);
-  }
-  
-  // Initialize the page when DOM is loaded
-  document.addEventListener('DOMContentLoaded', initTemplatesPage);
+});

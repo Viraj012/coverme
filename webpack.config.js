@@ -10,7 +10,8 @@ module.exports = {
     'popup/popup': './src/popup/popup.js',
     'profile/profile': './src/profile/profile.js',
     'templates/templates': './src/templates/templates.js',
-    'settings/settings': './src/settings/settings.js'
+    'settings/settings': './src/settings/settings.js',
+    'onboarding/onboarding': './src/onboarding/onboarding.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -46,6 +47,11 @@ module.exports = {
         { from: "src/templates/templates.css", to: "templates/templates.css" },
         { from: "src/settings/settings.html", to: "settings/settings.html" },
         { from: "src/settings/settings.css", to: "settings/settings.css" },
+        // Add new onboarding files
+        { from: "src/onboarding/onboarding.html", to: "onboarding/onboarding.html" },
+        { from: "src/onboarding/onboarding.css", to: "onboarding/onboarding.css" },
+        // Add image directory
+        { from: "src/images", to: "images" },
         { from: "manifest.json", to: "manifest.json" }
       ],
     }),
