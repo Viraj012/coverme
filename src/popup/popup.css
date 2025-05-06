@@ -45,6 +45,16 @@ header {
   margin-right: 10px;
 }
 
+.user-greeting {
+  font-size: 14px;
+  color: #4CAF50;
+  font-weight: 500;
+}
+
+#username {
+  font-weight: 600;
+}
+
 h1 {
   font-size: 20px;
   color: #2c3e50;

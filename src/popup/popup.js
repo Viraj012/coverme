@@ -249,6 +249,16 @@ function setupStatePersistence() {
 function initPopup() {
     console.log('Initializing popup...');
     
+    // Load user profile for greeting
+    chrome.storage.local.get(['userProfile'], function(data) {
+        const usernameElement = document.getElementById('username');
+        if (data.userProfile && data.userProfile.name) {
+            if (usernameElement) {
+                usernameElement.textContent = data.userProfile.name.split(' ')[0]; // Use first name only
+            }
+        }
+    });
+    
     // First, hide all sections
     hideAllSections();
     
