@@ -260,7 +260,13 @@ function initPopup() {
     });
     
     // First, hide all sections
-    hideAllSections();
+    // Instead of using transition, directly add the hidden class
+    if (elements.jobDetectionStatus) elements.jobDetectionStatus.classList.add('hidden');
+    if (elements.jobDetected) elements.jobDetected.classList.add('hidden'); 
+    if (elements.noJobDetected) elements.noJobDetected.classList.add('hidden');
+    if (elements.profileIncomplete) elements.profileIncomplete.classList.add('hidden');
+    if (elements.coverLetterOutput) elements.coverLetterOutput.classList.add('hidden');
+    if (elements.apiKeyMissing) elements.apiKeyMissing.classList.add('hidden');
     
     // Setup state persistence
     setupStatePersistence();
@@ -268,10 +274,23 @@ function initPopup() {
     // Reset job detection flag
     jobDetectionAttempted = false;
     
+    // Add a fallback in case the chrome.tabs query doesn't work
+    let initializationTimeout = setTimeout(() => {
+        console.log('Initialization timed out - showing fallback view');
+        // Show the no job detected view as fallback
+        elements.jobDetectionStatus.classList.add('hidden');
+        elements.noJobDetected.classList.remove('hidden');
+    }, 1500);
+    
     // ALWAYS get the current tab's URL to check if we need to clear cached job details
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        clearTimeout(initializationTimeout);
+        
         if (!tabs || !tabs.length) {
             console.error('No active tab found during initialization');
+            // Show the no job detected view as fallback
+            elements.jobDetectionStatus.classList.add('hidden');
+            elements.noJobDetected.classList.remove('hidden');
             return;
         }
         
@@ -299,7 +318,7 @@ function initPopup() {
                     chrome.storage.local.set({lastDetectedUrl: currentUrl}, function() {
                         // Always start with job detection for a new URL
                         console.log('Showing job detection status for new URL');
-                        showJobDetectionStatus();
+                        elements.jobDetectionStatus.classList.remove('hidden');
                         
                         // Small delay to ensure UI is updated before detection starts
                         setTimeout(() => {
@@ -317,19 +336,23 @@ function initPopup() {
 
 // Show job detection status
 function showJobDetectionStatus() {
-    // Hide all other sections first
-    hideAllSections();
+    console.log('Showing job detection status');
     
-    // After the hide transition completes, show the job detection status
-    setTimeout(() => {
-        // Show the job detection status section
-        if (elements.jobDetectionStatus) {
-            elements.jobDetectionStatus.classList.remove('hidden');
-            elements.jobDetectionStatus.classList.remove('fade-out');
-        } else {
-            console.error('Job detection status element not found');
-        }
-    }, 300); // Match transition duration from CSS
+    // Direct DOM manipulation for immediate visibility without transitions
+    if (elements.jobDetectionStatus) {
+        // Hide all other sections first  
+        if (elements.jobDetected) elements.jobDetected.classList.add('hidden');
+        if (elements.noJobDetected) elements.noJobDetected.classList.add('hidden');
+        if (elements.profileIncomplete) elements.profileIncomplete.classList.add('hidden');
+        if (elements.coverLetterOutput) elements.coverLetterOutput.classList.add('hidden');
+        if (elements.apiKeyMissing) elements.apiKeyMissing.classList.add('hidden');
+        
+        // Show the job detection status immediately
+        elements.jobDetectionStatus.classList.remove('hidden');
+        elements.jobDetectionStatus.classList.remove('fade-out');
+    } else {
+        console.error('Job detection status element not found');
+    }
 }
 
 // Helper function to continue initialization after URL check
@@ -373,8 +396,9 @@ function initializeAfterUrlCheck() {
                     currentJobDetails = storedJobDetails;
                     
                     // Show the job details in the manual input form for confirmation
-                    hideAllSections();
-                    showNoJobDetected();
+                    // Directly modify the DOM without transitions for initial load
+                    elements.jobDetectionStatus.classList.add('hidden');
+                    elements.noJobDetected.classList.remove('hidden');
                     
                     // Pre-fill the form with the detected details
                     if (elements.manualJobDescription) {
@@ -406,6 +430,10 @@ function initializeAfterUrlCheck() {
                            manualInput.description.trim() !== '' &&
                            (manualInput.title || manualInput.company)) {
                     
+                    // Use direct DOM manipulation for immediate visibility
+                    elements.jobDetectionStatus.classList.add('hidden');
+                    elements.noJobDetected.classList.remove('hidden');
+                    
                     // If we have manual input with description and at least one of title or company
                     // Create a job details object from manual input
                     console.log('Using manual input as job details');
@@ -414,10 +442,6 @@ function initializeAfterUrlCheck() {
                         title: manualInput.title || 'Unknown Job Title',
                         company: manualInput.company || 'Unknown Company'
                     };
-                    
-                    // Show job details in the manual input form for confirmation
-                    hideAllSections();
-                    showNoJobDetected();
                     
                     // Pre-fill the form with the manual input details
                     if (elements.manualJobDescription) {
@@ -430,7 +454,7 @@ function initializeAfterUrlCheck() {
                         elements.manualCompanyName.value = manualInput.company || '';
                     }
                     
-                    // Update the No Job Detection message to reflect that we found a job
+                    // Update the status card
                     const statusCard = elements.noJobDetected.querySelector('.status-card');
                     if (statusCard) {
                         const statusIcon = statusCard.querySelector('.status-icon');
@@ -472,11 +496,13 @@ function initializeAfterUrlCheck() {
                                         elements.manualCompanyName.value = data.manualInput.company || '';
                                     }
                                     
-                                    showNoJobDetected();
+                                    // Direct DOM manipulation for immediate visibility
+                                    elements.jobDetectionStatus.classList.add('hidden');
+                                    elements.noJobDetected.classList.remove('hidden');
                                 } else {
                                     console.log('No manual input found, starting job detection');
                                     
-                                    // Start job detection
+                                    // Direct DOM manipulation for immediate visibility
                                     elements.jobDetectionStatus.classList.remove('hidden');
                                     
                                     // Small delay to ensure UI is updated before detection starts

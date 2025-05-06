@@ -580,15 +580,14 @@ button:active::after {
   color: #666;
 }
 
-/* Page transitions */
+/* Page transitions - simplified to avoid visibility issues */
 #job-detection-status,
 #job-detected,
 #no-job-detected,
 #profile-incomplete,
 #coverLetterOutput,
 #api-key-missing {
-  opacity: 1;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
 }
 
 #job-detection-status.fade-out,
@@ -597,7 +596,7 @@ button:active::after {
 #profile-incomplete.fade-out,
 #coverLetterOutput.fade-out,
 #api-key-missing.fade-out {
-  opacity: 0;
+  opacity: 0.5;
 }
 
 /* Hidden elements */
