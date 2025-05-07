@@ -115,33 +115,48 @@ async function runJobDetection() {
   try {
     console.log('CoverMe: Running job detection');
     
+    // Check if URL suggests a job listing (pre-screening)
+    const url = window.location.href.toLowerCase();
+    const urlJobBlacklist = ['google.com', 'facebook.com', 'twitter.com', 'instagram.com', 'youtube.com', 'amazon.com'];
+    if (urlJobBlacklist.some(site => url.includes(site))) {
+      console.log('CoverMe: Skipping detection on non-job site');
+      return;
+    }
+    
     // Get the job site selectors and detection logic from the enhanced detection system
     const jobDetails = await enhancedJobDetection();
     
-    // Only proceed if valid job details were found
-    if (jobDetails && jobDetails.description) {
-      console.log('CoverMe: Job detected successfully', jobDetails);
+    // Only proceed if valid job details were found with high confidence
+    if (jobDetails && jobDetails.description && jobDetails.confidence >= 70) {
+      console.log('CoverMe: Job detected successfully with confidence:', jobDetails.confidence);
       
-      // Store the job details for use in the popup
-      chrome.storage.local.set({ 
-        currentJobDetails: jobDetails,
-        manualInput: {
-          description: jobDetails.description,
-          title: jobDetails.title || 'Unknown Job Title',
-          company: jobDetails.company || 'Unknown Company'
-        }
-      });
-      
-      // Notify background script
-      chrome.runtime.sendMessage({ 
-        action: 'jobDetected',
-        jobDetails: jobDetails
-      });
-      
-      // Show notification
-      showJobDetectedNotification();
+      // Additional validation: verify minimum length and required job terms
+      if (jobDetails.description.length >= 300 && 
+          /\b(responsibilities|requirements|qualifications|experience|skills)\b/i.test(jobDetails.description)) {
+        
+        // Store the job details for use in the popup
+        chrome.storage.local.set({ 
+          currentJobDetails: jobDetails,
+          manualInput: {
+            description: jobDetails.description,
+            title: jobDetails.title || 'Unknown Job Title',
+            company: jobDetails.company || 'Unknown Company'
+          }
+        });
+        
+        // Notify background script
+        chrome.runtime.sendMessage({ 
+          action: 'jobDetected',
+          jobDetails: jobDetails
+        });
+        
+        // Show notification
+        showJobDetectedNotification();
+      } else {
+        console.log('CoverMe: Job detection failed secondary validation checks');
+      }
     } else {
-      console.log('CoverMe: No job detected on this page');
+      console.log('CoverMe: No job detected on this page or confidence too low');
     }
   } catch (error) {
     console.error('CoverMe: Error in job detection:', error);
@@ -154,47 +169,69 @@ async function enhancedJobDetection() {
     // Get current domain
     const hostname = window.location.hostname;
     
+    // EARLY EXIT: Skip detection on common non-job sites
+    const nonJobSites = [
+      "google.com", "youtube.com", "facebook.com", "instagram.com", 
+      "twitter.com", "amazon.com", "reddit.com", "netflix.com", 
+      "pinterest.com", "wikipedia.org", "spotify.com", "gmail.com",
+      "yahoo.com", "walmart.com", "ebay.com", "twitch.tv",
+      "tiktok.com", "microsoft.com", "apple.com", "github.com"
+    ];
+    
+    if (nonJobSites.some(site => hostname.includes(site))) {
+      console.log(`CoverMe: Skipping detection on known non-job site: ${hostname}`);
+      return null;
+    }
+    
     // Step 1: Site-Specific Detection (most reliable)
     const jobSites = {
       "linkedin.com": {
         jobDescription: ".description__text, .show-more-less-html__markup, .jobs-description-content",
         jobTitle: ".top-card-layout__title, .job-detail-title, .jobs-unified-top-card__job-title",
-        company: ".topcard__org-name-link, .company-name, .jobs-unified-top-card__company-name"
+        company: ".topcard__org-name-link, .company-name, .jobs-unified-top-card__company-name",
+        pathCheck: url => url.includes("/jobs/") || url.includes("/job/")
       },
       "indeed.com": {
         jobDescription: "#jobDescriptionText, .jobsearch-jobDescriptionText",
         jobTitle: ".jobsearch-JobInfoHeader-title, .icl-u-xs-mb--xs",
-        company: ".jobsearch-InlineCompanyRating-companyHeader, .icl-u-lg-mr--sm"
+        company: ".jobsearch-InlineCompanyRating-companyHeader, .icl-u-lg-mr--sm",
+        pathCheck: url => url.includes("/viewjob") || url.includes("/job/")
       },
       "glassdoor.com": {
         jobDescription: ".jobDescriptionContent, .desc, [data-test='jobDescriptionText']",
         jobTitle: "[data-test='jobTitle'], .css-1vg6q84",
-        company: "[data-test='employer-name'], .css-87uc0g"
+        company: "[data-test='employer-name'], .css-87uc0g",
+        pathCheck: url => url.includes("/job-listing/") || url.includes("/Job/")
       },
       "monster.com": {
         jobDescription: ".job-description, .details-content",
         jobTitle: ".job-title, .title",
-        company: ".company, .name"
+        company: ".company, .name",
+        pathCheck: url => url.includes("/job-") || url.includes("/jobs/")
       },
       "ziprecruiter.com": {
         jobDescription: "#job-description, .jobDescriptionSection, [data-testid='job-description']",
         jobTitle: ".job_title, [data-testid='job-title']",
-        company: ".hiring_company_text, [data-testid='company-name']"
+        company: ".hiring_company_text, [data-testid='company-name']",
+        pathCheck: url => url.includes("/jobs/") 
       },
       "dice.com": {
         jobDescription: "#jobdescSec, .job-description",
         jobTitle: ".jobTitle, .job-title",
-        company: ".companyLink, .company-title"
+        company: ".companyLink, .company-title",
+        pathCheck: url => url.includes("/job-detail/")
       },
       "careerbuilder.com": {
         jobDescription: ".job-description, .data-display",
         jobTitle: ".data-results-title",
-        company: "[data-cb-company]"
+        company: "[data-cb-company]",
+        pathCheck: url => url.includes("/job/")
       },
       "simplyhired.com": {
         jobDescription: ".viewjob-description, .JobDescription_jobDescription",
         jobTitle: ".viewjob-jobTitle, .JobInfoHeader_jobTitle",
-        company: ".viewjob-employerName, .JobInfoHeader_companyName"
+        company: ".viewjob-employerName, .JobInfoHeader_companyName",
+        pathCheck: url => url.includes("/job/")
       },
       // Add more sites as needed
     };
@@ -205,6 +242,13 @@ async function enhancedJobDetection() {
     if (domain) {
       console.log(`CoverMe: Using site-specific detection for ${domain}`);
       const selectors = jobSites[domain];
+      
+      // First check if we're on a job listing page by examining the URL
+      const currentUrl = window.location.href;
+      if (selectors.pathCheck && !selectors.pathCheck(currentUrl)) {
+        console.log(`CoverMe: On ${domain} but not on a job listing page, skipping detection`);
+        return null;
+      }
       
       // Extract job description
       const descriptionSelector = selectors.jobDescription.split(', ');
@@ -244,7 +288,8 @@ async function enhancedJobDetection() {
           }
         }
         
-        if (description.length > 100) {
+        // Only accept if description is comprehensive enough
+        if (description.length > 200) {
           return {
             description: description,
             title: title || 'Unknown Job Title',
@@ -255,18 +300,29 @@ async function enhancedJobDetection() {
       }
     }
     
-    // Step 2: Semantic Section Detection
+    // Check if URL suggests a job listing
+    const url = window.location.href.toLowerCase();
+    const urlJobIndicators = ['/job/', '/jobs/', '/career', '/careers', '/position', '/opening', '/apply', '/vacancy'];
+    const isLikelyJobUrl = urlJobIndicators.some(indicator => url.includes(indicator));
+    
+    if (!isLikelyJobUrl) {
+      console.log('CoverMe: URL does not suggest a job listing, skipping further detection');
+      return null;
+    }
+    
+    // Step 2: Semantic Section Detection - more precise keywords
     console.log('CoverMe: Trying semantic section detection');
     
     const jobKeywords = [
       "job description",
+      "position description",
       "responsibilities",
-      "requirements",
-      "qualifications",
-      "about this role",
-      "what you'll do",
-      "about the job",
-      "role overview"
+      "key responsibilities",
+      "job requirements",
+      "position requirements",
+      "job qualifications",
+      "required qualifications",
+      "essential functions"
     ];
     
     // Find elements containing job-related keywords
@@ -276,7 +332,7 @@ async function enhancedJobDetection() {
       jobSections = jobSections.concat(elements);
     }
     
-    if (jobSections.length > 0) {
+    if (jobSections.length >= 2) { // Require at least 2 job-related sections
       let description = '';
       for (const section of jobSections) {
         const parent = section.closest('section, article, div');
@@ -319,7 +375,8 @@ async function enhancedJobDetection() {
         if (company) break;
       }
       
-      if (description.length > 100) {
+      // More stringent requirements for content
+      if (description.length > 300 && countJobKeywords(description) >= 5) {
         return {
           description: description,
           title: title,
@@ -329,7 +386,7 @@ async function enhancedJobDetection() {
       }
     }
     
-    // Step 3: Content Cluster Detection
+    // Step 3: Content Cluster Detection with stricter requirements
     console.log('CoverMe: Trying content cluster detection');
     const mainContent = 
       document.querySelector('main') || 
@@ -339,17 +396,17 @@ async function enhancedJobDetection() {
     const contentBlocks = Array.from(mainContent.querySelectorAll('div, section, article'))
       .filter(el => {
         const isNav = el.closest('nav, header, footer');
-        return !isNav && el.innerText.length > 300;
+        return !isNav && el.innerText.length > 500; // Increased length requirement
       })
       .sort((a, b) => b.innerText.length - a.innerText.length);
     
     if (contentBlocks.length > 0) {
       const largestBlock = contentBlocks[0];
       
-      // Check if it looks like a job description
-      const jobRelatedRegex = /\b(responsibilities|requirements|qualifications|skills|experience|job|role)\b/i;
+      // Check if it looks like a job description - more specific regex
+      const jobRelatedRegex = /\b(job description|position description|responsibilities|requirements|qualifications|essential functions)\b.*\b(experience|skills|education|background|knowledge)\b/i;
       
-      if (jobRelatedRegex.test(largestBlock.innerText)) {
+      if (jobRelatedRegex.test(largestBlock.innerText) && countJobKeywords(largestBlock.innerText) >= 4) {
         let title = '';
         let company = '';
         
@@ -367,47 +424,33 @@ async function enhancedJobDetection() {
           description: largestBlock.innerText.trim(),
           title: title,
           company: company,
-          confidence: 60
+          confidence: 70
         };
       }
     }
     
-    // Step 4: Fallback - look for largest text block on page
-    console.log('CoverMe: Trying fallback detection');
-    const allParagraphs = Array.from(document.querySelectorAll('p'))
-      .filter(p => p.innerText.length > 30)
-      .sort((a, b) => b.innerText.length - a.innerText.length);
-    
-    if (allParagraphs.length > 0) {
-      const largestParagraph = allParagraphs[0];
-      const jobRelatedRegex = /\b(responsibilities|requirements|qualifications|skills|experience|job|role)\b/i;
-      
-      if (jobRelatedRegex.test(largestParagraph.innerText) && largestParagraph.innerText.length > 300) {
-        // Try to extract title from document title
-        let title = document.title.split(' | ')[0].split(' - ')[0].trim();
-        
-        // Try to extract company from meta tags
-        let company = '';
-        const metaCompany = document.querySelector('meta[property="og:site_name"]');
-        if (metaCompany) {
-          company = metaCompany.getAttribute('content');
-        }
-        
-        return {
-          description: largestParagraph.innerText.trim(),
-          title: title,
-          company: company,
-          confidence: 40
-        };
-      }
-    }
-    
-    // No job found
+    // No more fallback detection - removed Step 4 to prevent false positives
+    console.log('CoverMe: No job detected');
     return null;
   } catch (error) {
     console.error('CoverMe: Error in enhanced job detection:', error);
     return null;
   }
+}
+
+// Helper function to count job-related keywords in text
+function countJobKeywords(text) {
+  const jobTerms = [
+    'job description', 'responsibilities', 'requirements', 'qualifications', 
+    'experience', 'skills', 'apply', 'position', 'candidate', 'employment',
+    'salary', 'benefits', 'degree', 'education', 'background', 'knowledge',
+    'abilities', 'proficiency', 'expertise', 'duty', 'duties', 'function',
+    'competencies', 'capabilities', 'proficient', 'familiar with', 'team member',
+    'career', 'application', 'applicants', 'hire', 'hiring', 'opportunity'
+  ];
+  
+  const lowerText = text.toLowerCase();
+  return jobTerms.filter(term => lowerText.includes(term)).length;
 }
 
 // Helper function to find elements containing specific text

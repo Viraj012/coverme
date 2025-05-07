@@ -76,7 +76,7 @@ h3 {
 }
 
 .progress {
-  background-color: #4CAF50;
+  background-color: #2baafe;
   position: absolute;
   top: 50%;
   left: 0;
@@ -102,7 +102,7 @@ h3 {
 }
 
 .step.active {
-  border-color: #4CAF50;
+  border-color: #2baafe;
 }
 
 .onboarding-step {
@@ -172,9 +172,9 @@ input, textarea, select {
 }
 
 input:focus, textarea:focus, select:focus {
-  border-color: #4CAF50;
+  border-color: #2baafe;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+  box-shadow: 0 0 0 2px rgba(43, 170, 254, 0.1);
 }
 
 .button-row {
@@ -195,12 +195,12 @@ button {
 }
 
 .primary-btn {
-  background-color: #4CAF50;
+  background-color: #2baafe;
   color: white;
 }
 
 .primary-btn:hover {
-  background-color: #45a049;
+  background-color: #1a99eb;
   transform: translateY(-1px);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
@@ -269,7 +269,7 @@ button {
 }
 
 .step-number {
-  background-color: #4CAF50;
+  background-color: #2baafe;
   color: white;
   width: 30px;
   height: 30px;

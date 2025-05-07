@@ -87,7 +87,7 @@ h2 {
 .progress-fill {
   position: absolute;
   height: 100%;
-  background-color: #4CAF50;
+  background-color: #2baafe;
   border-radius: 2px;
   width: 0%;
   transition: width 0.3s ease;
@@ -127,8 +127,8 @@ h2 {
 }
 
 .progress-step.active .step-icon {
-  background-color: #4CAF50;
-  border-color: #4CAF50;
+  background-color: #2baafe;
+  border-color: #2baafe;
   color: white;
 }
 
@@ -138,8 +138,8 @@ h2 {
 }
 
 .progress-step.completed .step-icon {
-  background-color: #4CAF50;
-  border-color: #4CAF50;
+  background-color: #2baafe;
+  border-color: #2baafe;
   color: white;
 }
 
@@ -194,8 +194,8 @@ input, textarea, select {
 
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: #4CAF50;
-  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+  border-color: #2baafe;
+  box-shadow: 0 0 0 2px rgba(43, 170, 254, 0.1);
 }
 
 textarea {
@@ -256,8 +256,8 @@ input[type="checkbox"] {
 }
 
 .tag {
-  background-color: #e8f5e9;
-  color: #4CAF50;
+  background-color: #e6f4ff;
+  color: #2baafe;
   padding: 4px 10px;
   border-radius: 16px;
   display: flex;
@@ -299,14 +299,14 @@ button {
 }
 
 .primary-btn {
-  background-color: #4CAF50;
+  background-color: #2baafe;
   color: white;
   border-radius: 6px;
   padding: 12px 24px;
 }
 
 .primary-btn:hover {
-  background-color: #45a049;
+  background-color: #1a99eb;
   transform: translateY(-1px);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
@@ -325,9 +325,9 @@ button {
 }
 
 .add-btn {
-  background-color: #e8f5e9;
-  color: #4CAF50;
-  border: 1px solid #c8e6c9;
+  background-color: #e6f4ff;
+  color: #2baafe;
+  border: 1px solid #b3e0ff;
   border-radius: 6px;
   padding: 10px 16px;
   font-size: 13px;
@@ -335,7 +335,7 @@ button {
 }
 
 .add-btn:hover {
-  background-color: #c8e6c9;
+  background-color: #b3e0ff;
 }
 
 .btn-icon {
@@ -358,7 +358,7 @@ button {
 .success-icon {
   width: 64px;
   height: 64px;
-  background-color: #4CAF50;
+  background-color: #2baafe;
   color: white;
   border-radius: 50%;
   display: flex;

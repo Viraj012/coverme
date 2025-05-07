@@ -47,7 +47,7 @@ header {
 
 .user-greeting {
   font-size: 14px;
-  color: #4CAF50;
+  color: #2baafe;
   font-weight: 500;
 }
 
@@ -136,7 +136,7 @@ h3 {
   height: 40px;
   margin: 0 auto 14px;
   border: 3px solid rgba(240, 240, 240, 0.6);
-  border-top: 3px solid #4CAF50;
+  border-top: 3px solid #2baafe;
   border-radius: 50%;
   animation: spin 1.2s cubic-bezier(0.4, 0.1, 0.3, 1) infinite;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -237,8 +237,8 @@ select:hover {
 
 select:focus {
   outline: none;
-  border-color: #4CAF50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+  border-color: #2baafe;
+  box-shadow: 0 0 0 3px rgba(43, 170, 254, 0.15);
 }
 
 .select-arrow {
@@ -254,7 +254,7 @@ select:focus {
 
 .select-wrapper:hover .select-arrow {
   transform: translateY(-50%) scale(1.1);
-  color: #4CAF50;
+  color: #2baafe;
 }
 
 .form-row {
@@ -290,8 +290,8 @@ textarea:hover {
 input[type="text"]:focus, 
 textarea:focus {
   outline: none;
-  border-color: #4CAF50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+  border-color: #2baafe;
+  box-shadow: 0 0 0 3px rgba(43, 170, 254, 0.15);
 }
 
 /* Make job description textarea taller */
@@ -409,7 +409,7 @@ button:active::after {
   left: 50%;
   width: 5px;
   height: 5px;
-  background: rgba(76, 175, 80, 0.7);
+  background: rgba(43, 170, 254, 0.7);
   border-radius: 100%;
   transform: scale(1, 1) translate(-50%);
   transform-origin: 50% 50%;
@@ -418,18 +418,18 @@ button:active::after {
 }
 
 .primary-btn {
-  background-color: #4CAF50;
+  background-color: #2baafe;
   color: white;
   border-radius: 8px;
   padding: 14px 20px;
   width: 100%;
-  box-shadow: 0 2px 6px rgba(76, 175, 80, 0.2);
+  box-shadow: 0 2px 6px rgba(43, 170, 254, 0.2);
 }
 
 .primary-btn:hover {
-  background-color: #45a049;
+  background-color: #1a99eb;
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 4px 10px rgba(43, 170, 254, 0.3);
 }
 
 .primary-btn:active {
@@ -557,13 +557,13 @@ button:active::after {
 
 .nav-btn:hover {
   background-color: #f1f1f1;
-  color: #4CAF50;
+  color: #2baafe;
   transform: translateY(-2px);
 }
 
 .nav-btn:hover .btn-icon {
   transform: scale(1.15);
-  color: #4CAF50;
+  color: #2baafe;
 }
 
 .nav-btn:active {
